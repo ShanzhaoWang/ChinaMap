@@ -1,0 +1,47 @@
+---
+title: "White Wine Map"
+author: "Shan"
+date: "July 1, 2018"
+output: html_document
+---
+```{r}
+library(mapdata)
+library(maptools)
+
+#map("china", col = "gray40", ylim = c(17, 54))
+
+
+x <- maptools::readShapePoly('bou2_4p.shp')
+
+
+cn_prov_name <- na.omit(unique(x$NAME))
+en_prov_name <- c("Heilongjiang", "Inner Mongolia", "Xinjiang", "Jilin",
+                  "Liaoning", "Gansu", "Hebei", "Beijing", "Shanxi",
+                  "Tianjin", "Shaanxi", "Ningxia", "Qinghai", "Shandong",
+                  "Tibet", "Henan", "Jiangsu", "Anhui", "Sichuan", "Hubei",
+                  "Chongqing", "Shanghai", "Zhejiang", "Hunan", "Jiangxi",
+                  "Yunan", "Guizhou", "Fujian", "Guangxi", "Taiwan", 
+                  "Guangdong", "Hong Kong", "Hainan")
+# length(cn_prov_name) == length(en_prov_name)
+
+prov_name <- data.frame(cn_prov_name, en_prov_name) 
+
+getColor = function(mapdata, provname, provcol, othercol){
+	f = function(x, y) ifelse(x %in% y, which(y == x), 0);
+	colIndex = sapply(unique(mapdata$NAME), f, provname);
+	fg = c(othercol, provcol)[colIndex + 1];
+	return(fg);
+}
+
+provname_1 = c("\272\332\301\372\275\255\312\241", "\274\252\301\326\312\241", "\314\354\275\362\312\320", "\304\332\303\311\271\305\327\324\326\316\307\370")
+provcol = c("red", "green", "yellow", "purple")
+plot(x, col = getColor(x@data, provname_1, provcol, "white"))
+
+#getColor(x@data, provname_1, provcol, "white")
+
+
+
+
+
+```
+
